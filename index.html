@@ -62,39 +62,46 @@
   /* ---- trilho de elevador ---- */
   .rail{
     position:absolute;right:30px;top:50%;transform:translateY(-50%);
-    height:min(66vh,560px);width:104px;
+    height:min(66vh,560px);width:116px;
+  }
+  /* painel de vidro atras do trilho: garante contraste do texto contra
+     qualquer trecho da foto (ceu claro, fachada clara, etc.) */
+  .rail::before{
+    content:'';position:absolute;left:-14px;right:-14px;top:-46px;bottom:-14px;
+    background:rgba(11,15,20,.46);border:1px solid rgba(237,241,245,.09);
+    border-radius:18px;backdrop-filter:blur(11px);pointer-events:none;
+  }
+  .rail-cap{
+    position:absolute;right:4px;top:-30px;
+    font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
+    color:var(--paper);opacity:.6;
   }
   .rail-line{
-    position:absolute;left:15px;top:0;bottom:0;width:1px;background:var(--line);
+    position:absolute;left:19px;top:0;bottom:0;width:1px;background:rgba(237,241,245,.24);
   }
   .rail-fill{
-    position:absolute;left:15px;width:1px;background:linear-gradient(180deg,var(--brass),rgba(185,194,204,.15));
+    position:absolute;left:19px;width:2px;margin-left:-.5px;background:linear-gradient(180deg,var(--brass),rgba(185,194,204,.18));
     transition:top .5s cubic-bezier(.4,0,.2,1),bottom .5s cubic-bezier(.4,0,.2,1);
   }
   .stop{
     position:absolute;left:0;transform:translateY(-50%);
     display:flex;align-items:center;gap:11px;
-    background:none;border:0;padding:5px 6px;margin:0;
-    color:var(--haze);cursor:pointer;width:100%;text-align:left;
-    font-family:var(--sans);font-size:11px;letter-spacing:.09em;
+    background:none;border:0;padding:6px 8px;margin:0;
+    color:var(--paper);cursor:pointer;width:100%;text-align:left;
+    font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:.06em;
     font-variant-numeric:tabular-nums;
-    border-radius:6px;
-    transition:color .25s ease;
+    border-radius:8px;
+    transition:color .2s ease,background-color .2s ease;
   }
-  .stop .tick{width:11px;height:1px;background:currentColor;flex:0 0 auto;margin-left:10px;transition:width .25s ease,margin-left .25s ease}
-  .stop .lbl{opacity:.72;transition:opacity .25s ease}
-  .stop:hover{color:var(--paper)}
-  .stop:hover .tick{width:19px;margin-left:2px}
-  .stop:focus-visible{outline:1px solid var(--brass);outline-offset:2px}
-  .stop[aria-current="true"]{color:var(--brass)}
-  .stop[aria-current="true"] .tick{width:23px;margin-left:0;height:1px}
-  .stop[aria-current="true"] .lbl{opacity:1;font-weight:600}
-  .rail-cap{
-    position:absolute;right:0;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--haze);opacity:.55;
-  }
-  .rail-cap.top{top:-24px}
-  .rail-cap.bot{bottom:-24px}
+  .stop .tick{width:12px;height:2px;border-radius:1px;background:currentColor;flex:0 0 auto;margin-left:9px;transition:width .2s ease,margin-left .2s ease,background-color .2s ease}
+  .stop .lbl{opacity:.66;transition:opacity .2s ease}
+  .stop:hover{background:rgba(237,241,245,.09)}
+  .stop:hover .lbl{opacity:.95}
+  .stop:hover .tick{width:20px;margin-left:1px}
+  .stop:focus-visible{outline:1px solid var(--paper);outline-offset:2px}
+  .stop[aria-current="true"]{background:rgba(237,241,245,.15);font-weight:700}
+  .stop[aria-current="true"] .tick{width:26px;margin-left:0;height:2px;background:var(--brass)}
+  .stop[aria-current="true"] .lbl{opacity:1}
 
   /* ---- controles ---- */
   .tools{position:absolute;right:30px;bottom:30px;display:flex;gap:8px}
@@ -137,8 +144,10 @@
     .brand{top:18px;left:18px}
     .wordmark{font-size:20px}
     .readout{left:18px;bottom:22px}
-    .rail{right:14px;width:74px;height:min(60vh,460px)}
-    .stop{font-size:10px;gap:7px}
+    .rail{right:14px;width:82px;height:min(60vh,460px)}
+    .rail::before{top:-40px}
+    .rail-cap{font-size:9px;top:-26px}
+    .stop{font-size:12px;gap:7px}
     .tools{right:14px;bottom:22px}
     .hint{display:none}
     .veil-top{height:140px}
@@ -170,6 +179,7 @@
   </div>
 
   <nav class="rail" id="rail" aria-label="Selecionar andar">
+    <span class="rail-cap">Andares</span>
     <div class="rail-line"></div>
     <div class="rail-fill" id="railfill"></div>
   </nav>

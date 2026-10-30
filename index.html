@@ -170,11 +170,11 @@
   </header>
 
   <div class="readout">
-    <h2 class="floor-title" id="ftitle">2&#186; andar</h2>
+    <h2 class="floor-title" id="ftitle">1&#186; andar</h2>
     <p class="floor-meta">
-      <span>Altura <b id="falt">8,8 m</b></span>
+      <span>Altura <b id="falt">3,3 m</b></span>
       <span class="dot">/</span>
-      <span id="fidx">01 de 16</span>
+      <span id="fidx">01 de 15</span>
     </p>
   </div>
 
@@ -212,22 +212,21 @@
    do drone (altitude relativa crescente, ~3 m entre andares).
 --------------------------------------------------------------- */
 const PANOS = [
-{floor:2,alt:8.8,src:"img/andar-01.webp"},
-{floor:3,alt:10.6,src:"img/andar-02.webp"},
-{floor:4,alt:13.9,src:"img/andar-03.webp"},
-{floor:5,alt:17.3,src:"img/andar-04.webp"},
-{floor:6,alt:20.0,src:"img/andar-05.webp"},
-{floor:7,alt:23.3,src:"img/andar-06.webp"},
-{floor:8,alt:25.8,src:"img/andar-07.webp"},
-{floor:9,alt:28.8,src:"img/andar-08.webp"},
-{floor:10,alt:31.9,src:"img/andar-09.webp"},
-{floor:11,alt:35.0,src:"img/andar-10.webp"},
-{floor:12,alt:37.8,src:"img/andar-11.webp"},
-{floor:13,alt:41.2,src:"img/andar-12.webp"},
-{floor:14,alt:44.1,src:"img/andar-13.webp"},
-{floor:15,alt:46.9,src:"img/andar-14.webp"},
-{floor:16,alt:49.7,src:"img/andar-15.webp"},
-{floor:17,alt:53.8,src:"img/andar-16.webp"}
+{lbl:"1\u00ba",title:"1\u00ba andar",alt:3.3,src:"img/andar-01.webp"},
+{lbl:"2\u00ba",title:"2\u00ba andar",alt:7.0,src:"img/andar-02.webp"},
+{lbl:"3\u00ba",title:"3\u00ba andar",alt:10.1,src:"img/andar-03.webp"},
+{lbl:"4\u00ba",title:"4\u00ba andar",alt:14.9,src:"img/andar-04.webp"},
+{lbl:"5\u00ba",title:"5\u00ba andar",alt:15.8,src:"img/andar-05.webp"},
+{lbl:"6\u00ba",title:"6\u00ba andar",alt:21.4,src:"img/andar-06.webp"},
+{lbl:"7\u00ba",title:"7\u00ba andar",alt:23.9,src:"img/andar-07.webp"},
+{lbl:"8\u00ba",title:"8\u00ba andar",alt:27.1,src:"img/andar-08.webp"},
+{lbl:"9\u00ba",title:"9\u00ba andar",alt:30.4,src:"img/andar-09.webp"},
+{lbl:"10\u00ba",title:"10\u00ba andar",alt:32.9,src:"img/andar-10.webp"},
+{lbl:"11\u00ba",title:"11\u00ba andar",alt:36.1,src:"img/andar-11.webp"},
+{lbl:"12\u00ba",title:"12\u00ba andar",alt:39.2,src:"img/andar-12.webp"},
+{lbl:"13\u00ba",title:"13\u00ba andar",alt:40.9,src:"img/andar-13.webp"},
+{lbl:"14\u00ba",title:"14\u00ba andar",alt:44.0,src:"img/andar-14.webp"},
+{lbl:"A\u00e9rea",title:"Vista a\u00e9rea",alt:173.4,src:"img/andar-15.webp"}
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -372,18 +371,16 @@ function frame(now){
 
 /* ---------------- navega\u00e7\u00e3o entre andares ---------------- */
 const stops = [];
-const alts = PANOS.map(p => p.alt);
-const aMin = Math.min(...alts), aMax = Math.max(...alts);
-const posOf = (alt) => (1 - (alt - aMin) / (aMax - aMin)) * 100;   // 0% = topo
+const posOf = (i) => (1 - i / (PANOS.length - 1)) * 100;   // 0% = topo, espacamento uniforme
 
 PANOS.forEach((p, i) => {
   const b = document.createElement('button');
   b.className = 'stop';
-  b.style.top = posOf(p.alt) + '%';
+  b.style.top = posOf(i) + '%';
   b.type = 'button';
   b.setAttribute('aria-current', i === 0 ? 'true' : 'false');
-  b.innerHTML = '<span class="lbl">' + p.floor + '\u00ba</span><span class="tick"></span>';
-  b.title = p.floor + '\u00ba andar \u00b7 ' + p.alt.toFixed(1).replace('.', ',') + ' m';
+  b.innerHTML = '<span class="lbl">' + p.lbl + '</span><span class="tick"></span>';
+  b.title = p.title + ' \u00b7 ' + p.alt.toFixed(1).replace('.', ',') + ' m';
   b.addEventListener('click', () => go(i));
   $('rail').appendChild(b);
   stops.push(b);
@@ -396,12 +393,12 @@ function go(i){
   cur = i;
   const p = PANOS[i];
 
-  $('ftitle').textContent = p.floor + '\u00ba andar';
+  $('ftitle').textContent = p.title;
   $('falt').textContent = p.alt.toFixed(1).replace('.', ',') + ' m';
   $('fidx').textContent = String(i + 1).padStart(2, '0') + ' de ' + PANOS.length;
-  document.title = p.floor + '\u00ba andar \u2014 Lebensart Tour 360';
+  document.title = p.title + ' \u2014 Lebensart Tour 360';
   stops.forEach((s, k) => s.setAttribute('aria-current', k === i ? 'true' : 'false'));
-  $('railfill').style.top = posOf(p.alt) + '%';
+  $('railfill').style.top = posOf(i) + '%';
   $('railfill').style.bottom = '0%';
 
   const ready = texCache.has(i);
@@ -503,6 +500,7 @@ load(0).then(() => {
   $('bootbar').style.background = '#B4472F';
 });
 </script>
+
 
 </body>
 </html>
